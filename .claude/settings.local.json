@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pyinstaller build.spec --clean)",
+      "Bash(dir)",
+      "Bash(pyinstaller --version)",
+      "Bash(7z l *)",
+      "Bash(pyinstaller build.spec)",
+      "Bash(tasklist /v)",
+      "Bash(awk '{print $1, $2, $5}')",
+      "Bash(wevtutil qe *)",
+      "Bash(grep -iA5 -iB5 \"ACE\\\\|Tencent\\\\|freeze\\\\|hang\")",
+      "Bash(powershell -Command \"Get-ItemProperty 'HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\ACE-*' -ErrorAction SilentlyContinue | Select-Object PSPath,Start,Type,ErrorControl\")",
+      "Bash(ls -la \"/c/Program Files/AntiCheatExpert/\" 2>/dev/null)",
+      "Bash(powershell -Command 'Get-Process explorer | Select-Object ProcessName,Id,CPU,Handles,Threads,@{N='\\\\''WS_MB'\\\\'';E={[math]::Round\\($_.WS/1MB,2\\)}}')",
+      "Bash(powershell -Command 'Get-Process | Where-Object {$_.ProcessName -eq '\\\\''ACE-Tray'\\\\''} | Select-Object ProcessName,Id,CPU,Handles,Threads,@{N='\\\\''WS_MB'\\\\'';E={[math]::Round\\($_.WS/1MB,2\\)}},Path')",
+      "Bash(powershell -Command 'Get-WmiObject Win32_PnPSignedDriver | Where-Object {$_.DeviceName -like '\\\\''*ACE*'\\\\''} | Select-Object DeviceName,DriverVersion,DriverDate,IsSigned,Manufacturer')",
+      "Bash(reg query *)",
+      "Bash(powershell -Command 'Get-Process explorer | Select-Object -ExpandProperty Modules | Where-Object {$_.ModuleName -like '\\\\''*ACE*'\\\\'' -or $_.ModuleName -like '\\\\''*Tencent*'\\\\''} | Select-Object ModuleName,FileName,Size')",
+      "Bash(powershell -Command \"Get-ItemProperty 'HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run' -ErrorAction SilentlyContinue | Format-List\")",
+      "Bash(powershell -Command 'Get-WmiObject Win32_SystemDriver | Where-Object {$_.Name -like '\\\\''ACE*'\\\\''} | Select-Object Name,State,Status,StartMode,PathName')",
+      "Bash(powershell -Command 'Get-CimInstance Win32_PerfFormattedData_PerfProc_Process | Where-Object {$_.Name -eq '\\\\''explorer'\\\\''} | Select-Object Name,HandleCount,ThreadCount,WorkingSet,PercentProcessorTime')",
+      "Bash(powershell -Command 'Get-WinEvent -LogName System -MaxEvents 50 | Where-Object {$_.Id -eq 7036 -and $_.Message -like '\\\\''*ACE*'\\\\''} | Select-Object -First 5 TimeCreated,Message')",
+      "Bash(tasklist)",
+      "Bash(rm -f music/*.aac)",
+      "Read(//c/Users/28143/Desktop/songs/**)",
+      "Bash(grep -i \"\\\\.mp3$\")"
+    ]
+  }
+}

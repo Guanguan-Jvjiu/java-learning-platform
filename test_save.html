@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试存档</title>
+</head>
+<body>
+    <h1>LocalStorage 测试</h1>
+    <button onclick="save()">保存数据</button>
+    <button onclick="load()">读取数据</button>
+    <button onclick="clear()">清除数据</button>
+    <div id="output"></div>
+
+    <script>
+        function save() {
+            const data = { test: 'data', time: new Date().toISOString() };
+            localStorage.setItem('test', JSON.stringify(data));
+            document.getElementById('output').innerHTML = '已保存: ' + JSON.stringify(data);
+        }
+
+        function load() {
+            const data = localStorage.getItem('test');
+            document.getElementById('output').innerHTML = '读取到: ' + (data || '无数据');
+        }
+
+        function clear() {
+            localStorage.clear();
+            document.getElementById('output').innerHTML = '已清除所有数据';
+        }
+
+        // 自动加载
+        window.onload = load;
+    </script>
+</body>
+</html>

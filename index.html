@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 交互式学习平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop-styles.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">☕ Java 学习之旅</h1>
+            <div class="nav-menu">
+                <button class="nav-menu-btn" onclick="returnToTitle()">🏠 返回标题</button>
+                <button class="nav-menu-btn" onclick="showProblemBank()">📚 题库</button>
+                <button class="nav-menu-btn" onclick="openShop()">🖼️ 背景</button>
+                <button class="nav-menu-btn" onclick="showSaveManager()">💾 存档</button>
+                <button class="nav-menu-btn" onclick="showMusicPanel()">🎵 音乐</button>
+                <button class="nav-menu-btn exit-btn" onclick="exitApp()">🚪 退出</button>
+            </div>
+            <div class="mini-player">
+                <button class="mini-play-btn" id="miniPlayBtn" onclick="toggleMiniPlayer()">▶</button>
+                <span class="mini-volume">🔊</span>
+            </div>
+            <div class="progress-info">
+                <span class="level">等级: <span id="userLevel">1</span></span>
+                <span class="xp">经验: <span id="userXP">0</span>/100</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 - 章节列表 -->
+        <aside class="sidebar" id="sidebar">
+            <h2>学习路线</h2>
+            <div class="chapters-list" id="chaptersList"></div>
+        </aside>
+
+        <!-- 内容区域 -->
+        <main class="content-area">
+            <!-- 欢迎页面 -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">欢迎来到 Java 学习之旅</h1>
+                    <p class="welcome-subtitle">为有 C/C++ 基础的同学精心设计</p>
+                    <div class="welcome-features">
+                        <div class="feature-card">
+                            <div class="feature-icon">📚</div>
+                            <h3>系统学习</h3>
+                            <p>9大章节,循序渐进</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎮</div>
+                            <h3>闯关模式</h3>
+                            <p>完成测验解锁关卡</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💻</div>
+                            <h3>代码示例</h3>
+                            <p>丰富的实战案例</p>
+                        </div>
+                    </div>
+                    <button class="start-button" onclick="startLearning()">开始学习</button>
+                </div>
+            </div>
+
+            <!-- 学习内容区域 -->
+            <div class="learning-area" id="learningArea" style="display: none;">
+                <!-- 内容卡片 -->
+                <div class="content-card" id="contentCard">
+                    <div class="card-header">
+                        <h2 class="content-title" id="contentTitle"></h2>
+                        <div class="card-actions">
+                            <button class="btn-icon" onclick="toggleSidebar()" title="切换侧边栏">☰</button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="cardBody"></div>
+                    <div class="card-footer">
+                        <button class="nav-btn" id="prevBtn" onclick="previousSection()">← 上一节</button>
+                        <span class="section-indicator" id="sectionIndicator"></span>
+                        <button class="nav-btn" id="nextBtn" onclick="nextSection()">下一节 →</button>
+                    </div>
+                </div>
+
+                <!-- 测验模态框 -->
+                <div class="modal" id="quizModal">
+                    <div class="modal-content">
+                        <h2>章节测验</h2>
+                        <div id="quizContent"></div>
+                        <div class="quiz-actions">
+                            <button class="btn-secondary" onclick="closeQuiz()">取消</button>
+                            <button class="btn-primary" onclick="submitQuiz()">提交答案</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 编程练习模态框 -->
+                <div class="modal" id="codingModal">
+                    <div class="modal-content coding-modal">
+                        <div class="coding-header">
+                            <h2 id="codingTitle">编程练习</h2>
+                            <span class="problem-progress" id="problemProgress">练习 1 / 2</span>
+                        </div>
+                        <div class="coding-description" id="codingDescription"></div>
+                        <div class="test-cases" id="testCases"></div>
+                        <div class="coding-hints" id="codingHints"></div>
+
+                        <h4>📝 代码编辑器:</h4>
+                        <textarea class="code-editor" id="codeEditor" spellcheck="false"></textarea>
+
+                        <div class="coding-result" id="codingResult"></div>
+
+                        <div class="coding-actions">
+                            <button class="btn-secondary" onclick="skipCodingProblem()">跳过练习</button>
+                            <button class="btn-primary" onclick="runCode()">▶ 运行代码</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 成就通知 -->
+                <div class="achievement-toast" id="achievementToast">
+                    <div class="achievement-content">
+                        <span class="achievement-icon">🏆</span>
+                        <div>
+                            <div class="achievement-title" id="achievementTitle"></div>
+                            <div class="achievement-text" id="achievementText"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 题库模态框 -->
+    <div class="modal" id="problemBankModal">
+        <div class="modal-content problem-bank-modal">
+            <div class="bank-header">
+                <h2>📚 练习题库</h2>
+                <button class="btn-icon" onclick="closeProblemBank()">✕</button>
+            </div>
+
+            <div class="bank-filters">
+                <button class="filter-btn active" onclick="filterProblems('all')">全部</button>
+                <button class="filter-btn" onclick="filterProblems(1)">第一章</button>
+                <button class="filter-btn" onclick="filterProblems(2)">第二章</button>
+                <button class="filter-btn" onclick="filterProblems('extra')">额外练习</button>
+            </div>
+
+            <div class="problem-list" id="problemList"></div>
+        </div>
+    </div>
+
+    <!-- 存档管理模态框 -->
+    <div class="modal" id="saveManagerModal">
+        <div class="modal-content save-manager-modal">
+            <div class="save-header">
+                <h2>💾 存档管理</h2>
+                <button class="btn-icon" onclick="closeSaveManager()">✕</button>
+            </div>
+
+            <div class="save-slots" id="saveSlots">
+                <!-- 存档位将由 JavaScript 动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 音乐面板模态框 -->
+    <div class="modal" id="musicPanel">
+        <div class="modal-content music-panel-modal">
+            <div class="music-header">
+                <h2>🎵 背景音乐</h2>
+                <button class="btn-icon" onclick="closeMusicPanel()">✕</button>
+            </div>
+
+            <div class="now-playing-section">
+                <div class="now-playing-info">
+                    <span class="now-playing-label">正在播放:</span>
+                    <span class="now-playing-title" id="nowPlayingTitle">未播放</span>
+                </div>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar-music" id="progressBar"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">0:00</span>
+                </div>
+            </div>
+
+            <div class="music-controls">
+                <button class="control-btn play-btn" id="modalPlayBtn" onclick="musicPlayer.togglePlay()">▶</button>
+            </div>
+
+            <div class="volume-control">
+                <span class="volume-icon">🔊</span>
+                <input type="range" class="volume-slider" id="volumeSlider"
+                       min="0" max="100" value="50"
+                       oninput="musicPlayer.setVolume(this.value)">
+                <span class="volume-value" id="volumeValue">50%</span>
+            </div>
+
+            <div class="playlist-section">
+                <h3 class="playlist-title">播放列表</h3>
+                <div class="playlist-container" id="playlistContainer">
+                    <!-- 播放列表将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 题目详情模态框 -->
+    <div class="modal" id="problemDetailModal">
+        <div class="modal-content problem-detail-modal">
+            <div class="detail-header">
+                <div>
+                    <h2 id="problemTitle"></h2>
+                    <div class="problem-meta">
+                        <span class="difficulty-tag" id="problemDifficulty"></span>
+                        <span class="time-limit" id="problemTimeLimit"></span>
+                    </div>
+                </div>
+                <button class="btn-icon" onclick="closeProblemDetail()">✕</button>
+            </div>
+
+            <div class="detail-body">
+                <section class="detail-section">
+                    <h3>题目描述</h3>
+                    <p id="problemDescription"></p>
+                </section>
+
+                <section class="detail-section">
+                    <h3>输入格式</h3>
+                    <p id="problemInputFormat"></p>
+                </section>
+
+                <section class="detail-section">
+                    <h3>输出格式</h3>
+                    <p id="problemOutputFormat"></p>
+                </section>
+
+                <section class="detail-section">
+                    <h3>输入输出样例</h3>
+                    <div class="sample-box">
+                        <div class="sample-item">
+                            <h4>输入</h4>
+                            <pre id="problemSampleInput"></pre>
+                        </div>
+                        <div class="sample-item">
+                            <h4>输出</h4>
+                            <pre id="problemSampleOutput"></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="detail-section" id="problemHintSection">
+                    <h3>说明/提示</h3>
+                    <p id="problemHint"></p>
+                </section>
+            </div>
+
+            <div class="detail-footer">
+                <button class="btn-secondary" onclick="closeProblemDetail()">返回题库</button>
+                <button class="btn-primary" onclick="startProblemCoding()">开始编程</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 背景模态框 -->
+    <div class="modal" id="shopModal">
+        <div class="modal-content shop-modal">
+            <div class="shop-header">
+                <h2>🖼️ 背景</h2>
+                <button class="close-btn" onclick="closeShop()">×</button>
+            </div>
+
+            <div class="shop-tabs">
+                <button class="shop-tab active" data-tab="background" onclick="switchShopTab('background')">📷 背景</button>
+                <button class="shop-tab" data-tab="music" onclick="switchShopTab('music')">🎵 音乐</button>
+            </div>
+
+            <div class="shop-body">
+                <!-- 背景商店 -->
+                <div class="shop-content active" id="backgroundShop"></div>
+
+                <!-- 音乐商店 -->
+                <div class="shop-content" id="musicShop"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="problemBank.js"></script>
+    <script src="data.js"></script>
+    <script src="saveManager.js"></script>
+    <script src="music-player.js"></script>
+    <script src="shop.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
