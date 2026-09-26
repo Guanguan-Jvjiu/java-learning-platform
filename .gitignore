@@ -46,3 +46,6 @@ Thumbs.db
 
 # User data
 user_progress.json
+
+# Claude Code configuration (personal)
+.claude/
