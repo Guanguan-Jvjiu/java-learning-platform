@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>验证编程练习 - Java学习平台</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .chapter {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chapter-header {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2196F3;
+        }
+        .exercise {
+            padding: 8px 0;
+            border-left: 3px solid #4CAF50;
+            padding-left: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+        }
+        .no-exercises {
+            color: #f44336;
+            font-style: italic;
+        }
+        .summary {
+            background: #2196F3;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 编程练习验证工具</h1>
+    <div id="result"></div>
+
+    <script src="data.js"></script>
+    <script>
+        const resultDiv = document.getElementById('result');
+        let totalExercises = 0;
+        let chaptersWithExercises = 0;
+
+        learningData.chapters.forEach((chapter, index) => {
+            const chapterDiv = document.createElement('div');
+            chapterDiv.className = 'chapter';
+
+            const header = document.createElement('div');
+            header.className = 'chapter-header';
+            header.textContent = `${chapter.icon} 第${index + 1}章：${chapter.name}`;
+            chapterDiv.appendChild(header);
+
+            if (chapter.codingProblems && chapter.codingProblems.length > 0) {
+                chaptersWithExercises++;
+                chapter.codingProblems.forEach((problem, pIndex) => {
+                    totalExercises++;
+                    const exerciseDiv = document.createElement('div');
+                    exerciseDiv.className = 'exercise';
+                    exerciseDiv.textContent = `✓ ${problem.title}`;
+                    chapterDiv.appendChild(exerciseDiv);
+                });
+            } else {
+                const noExercise = document.createElement('div');
+                noExercise.className = 'no-exercises';
+                noExercise.textContent = '✗ 没有编程练习';
+                chapterDiv.appendChild(noExercise);
+            }
+
+            resultDiv.appendChild(chapterDiv);
+        });
+
+        const summary = document.createElement('div');
+        summary.className = 'summary';
+        summary.innerHTML = `
+            <h2>📊 统计结果</h2>
+            <p><strong>总章节数：</strong>${learningData.chapters.length}</p>
+            <p><strong>有练习的章节：</strong>${chaptersWithExercises}</p>
+            <p><strong>练习题总数：</strong>${totalExercises}</p>
+            <p style="margin-top: 20px; font-size: 24px;">
+                ${chaptersWithExercises === learningData.chapters.length ? '✅ 完美！所有章节都有练习' : '⚠️ 部分章节缺少练习'}
+            </p>
+        `;
+        resultDiv.appendChild(summary);
+    </script>
+</body>
+</html>
